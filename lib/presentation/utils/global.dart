@@ -2,6 +2,20 @@
 
 import 'package:flutter/material.dart';
 
+enum TextFieldStyle {
+  plain,
+  normal,
+  outline,
+  underline,
+  search,
+  dropdown,
+  dropdownFix,
+  calendar,
+  calendarFix,
+  address,
+  addressFix
+}
+
 enum StatusTag { IN_PROGRESS, COMPLETED }
 
 abstract final class ScreenSize {

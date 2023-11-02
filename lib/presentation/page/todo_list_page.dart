@@ -1,8 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:todo_app/presentation/utils/colors.dart';
+
 import 'package:todo_app/presentation/utils/text_style.dart';
 import 'package:todo_app/presentation/widgets/common/appbar.dart';
 import 'package:todo_app/presentation/widgets/common/search_bar.dart';
+
 import 'package:todo_app/presentation/widgets/todo_card.dart';
 
 class TodoListPage extends StatefulWidget {
@@ -18,18 +20,31 @@ class _TodoListPageState extends State<TodoListPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-        backgroundColor: AppColor.colorBackground[1],
-        appBar: CustomAppBar(
-          title: Text(
-            "Todo List",
-            style: AppTextStyle.px22SemiCustom(color: AppColor.colorWhite),
-          ),
+      backgroundColor: AppColor.colorBackground,
+      appBar: CustomAppBar(
+        title: Text(
+          "Todo List",
+          style: AppTextStyle.px22SemiCustom(color: AppColor.colorWhite),
         ),
-        body: SingleChildScrollView(
-          child: Column(
-            children: [_buildSearchBar(), TodoCard()],
-          ),
-        ));
+      ),
+      body: SingleChildScrollView(
+        child: Column(
+          children: [
+            _buildSearchBar(),
+            TodoCard(),
+          ],
+        ),
+      ),
+      floatingActionButton: FloatingActionButton(
+        onPressed: () {},
+        backgroundColor: AppColor.colorPrimary,
+        tooltip: 'Increment',
+        child: const Icon(
+          Icons.add,
+          color: AppColor.colorWhite,
+        ),
+      ),
+    );
   }
 
   Widget _buildSearchBar() {

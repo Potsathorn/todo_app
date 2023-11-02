@@ -11,6 +11,7 @@ class TodoCard extends StatelessWidget {
   Widget build(BuildContext context) {
     return Card(
       elevation: 5,
+      margin: const EdgeInsets.all(8),
       child: Container(
         color: AppColor.colorWhite,
         padding: const EdgeInsets.all(8),
@@ -41,9 +42,11 @@ class TodoCard extends StatelessWidget {
               maxLines: 3,
               overflow: TextOverflow.ellipsis,
             )),
-            const Divider(),
+            Divider(
+              color: AppColor.colorGrey[2],
+            ),
             _row2WidgetAlignment(
-                child2: const Tag(text: StatusTag.IN_PROGRESS),
+                child2: const Tag(text: StatusTag.COMPLETED),
                 child1: Row(
                   children: [
                     Icon(

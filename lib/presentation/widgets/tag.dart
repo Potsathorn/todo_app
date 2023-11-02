@@ -27,7 +27,7 @@ class Tag extends StatelessWidget {
         borderRadius: BorderRadius.circular(4),
       ),
       child: Text(
-        text == StatusTag.IN_PROGRESS ? "IN_PROGRESS" : "COMPLETED",
+        text == StatusTag.IN_PROGRESS ? "IN PROGRESS" : "COMPLETED",
         style: AppTextStyle.px14MdCustom(color: textColor ?? titleColor()),
       ),
     );
@@ -36,18 +36,13 @@ class Tag extends StatelessWidget {
   Color backgroundColor() {
     switch (text) {
       case StatusTag.IN_PROGRESS:
-        return AppColor.colorPrimary[3]!.withOpacity(0.2);
-      default:
-        return AppColor.colorPrimary[2]!.withOpacity(0.2);
-    }
-  }
-
-  Color titleColor() {
-    switch (text) {
-      case StatusTag.IN_PROGRESS:
         return AppColor.colorPrimary[3]!;
       default:
         return AppColor.colorPrimary[2]!;
     }
+  }
+
+  Color titleColor() {
+    return AppColor.colorWhite;
   }
 }

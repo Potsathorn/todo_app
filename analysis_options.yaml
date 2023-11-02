@@ -1,0 +1,97 @@
+include: package:flutter_lints/flutter.yaml
+
+analyzer:
+  exclude:
+    # - lib/client.dart
+    - lib/models/*.g.dart
+    - lib/models/**/*.g.dart
+    - lib/storage/hive_store/*.g.dart
+    - test/_data/**
+  language:
+    strict-raw-types: true
+
+  #enable-experiment:
+    # - extension-methods
+    # implicit-dynamic: false
+
+  errors:
+    # ignore
+    lines_longer_than_80_chars: ignore
+    todo: ignore
+    deprecated_member_use_from_same_package : ignore
+    omit_local_variable_types: ignore
+    invalid_annotation_target: ignore
+
+    #warning
+    invalid_assignment: error
+    unnecessary_new: warning
+    argument_type_not_assignable: error
+    strict_raw_type: warning
+    unused_local_variable: warning
+    must_be_immutable: warning
+    close_sinks: warning
+    non_type_as_type_argument: warning
+    cast_to_non_type: warning
+    not_a_type: warning
+    invalid_use_of_visible_for_testing_member: warning
+    invalid_constructor_name: warning
+    extra_positional_arguments_could_be_named: warning
+    unused_field: warning
+    #error
+    undefined_getter: error
+    missing_return: error
+    camel_case_types: error
+    unused_import: warning
+    #info
+    dead_code: info
+    
+
+linter:
+  rules:
+    # ------ Disable individual rules ----- #
+    #                 ---                   #
+    # Turn off what you don't like.         #
+    # ------------------------------------- #
+
+    # Use parameter order as in json response
+    # - always_put_required_named_parameters_first
+
+    # Util classes are awesome!
+    # - avoid_classes_with_only_static_members
+
+
+    # ------ Enable individual rules ------ #
+    #                 ---                   #
+    # These rules here are good but too     #
+    # opinionated to enable them by default #
+    # ------------------------------------- #
+
+    # Make constructors the first thing in every class
+    # - sort_constructors_first
+
+    # The new tabs vs. spaces. Choose wisely
+    #- prefer_single_quotes
+    # prefer_double_quotes: false
+
+    # Good packages document everything
+    # - public_member_api_docs
+
+    # Blindly follow the Flutter code style, which prefers types everywhere
+    # - always_specify_types
+
+    # Back to the 80s
+    # - lines_longer_than_80_chars
+
+    # - always_declare_return_types
+    - omit_local_variable_types
+    # - always_put_control_body_on_new_line
+    - close_sinks
+    - sort_child_properties_last
+    - annotate_overrides
+    - hash_and_equals
+    - prefer_is_not_empty
+    - camel_case_types
+    - camel_case_extensions
+    - curly_braces_in_flow_control_structures
+    #  use trailing commas for all function calls and declarations unless the function call or definition
+    # - require_trailing_commas

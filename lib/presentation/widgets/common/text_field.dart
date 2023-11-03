@@ -1,4 +1,5 @@
 // Flutter imports:
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 
@@ -46,6 +47,8 @@ class CustomTextField extends StatefulWidget {
   final double? width;
   final bool isCurrency;
   final List<TextInputFormatter>? inputFormatters;
+  final Function(String)? onChangedDropdown;
+  final List<DropdownInputItem>? items;
 
   const CustomTextField({
     super.key,
@@ -83,6 +86,8 @@ class CustomTextField extends StatefulWidget {
     this.width,
     this.tooltip,
     this.inputFormatters,
+    this.onChangedDropdown,
+    this.items,
   });
 
   @override
@@ -90,6 +95,19 @@ class CustomTextField extends StatefulWidget {
 }
 
 class _CustomTextFieldState extends State<CustomTextField> {
+  void _openBottomSheet(BuildContext context) {
+    showCupertinoModalPopup(
+      context: context,
+      builder: (BuildContext context) {
+        return DropdownModalPopup(
+          title: widget.label,
+          items: widget.items!,
+          onChanged: widget.onChangedDropdown,
+        );
+      },
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     return Column(
@@ -170,6 +188,11 @@ class _CustomTextFieldState extends State<CustomTextField> {
                 ? GestureDetector(
                     onTap: () async {
                       FocusScope.of(context).requestFocus(FocusNode());
+
+                      if (widget.style == TextFieldStyle.dropdown &&
+                          widget.items != null) {
+                        _openBottomSheet(context);
+                      }
 
                       if (widget.style == TextFieldStyle.calendar &&
                           widget.onConfirmDateTime != null) {
@@ -382,11 +405,11 @@ class _CustomTextFieldState extends State<CustomTextField> {
       case TextFieldStyle.dropdown:
         return OutlineInputBorder(
             borderRadius: BorderRadius.circular(6.0),
-            borderSide: BorderSide(color: AppColor.colorGrey[3]!));
+            borderSide: BorderSide(color: AppColor.colorGrey[2]!));
       default:
         return OutlineInputBorder(
             borderRadius: BorderRadius.circular(6.0),
-            borderSide: BorderSide(color: AppColor.colorGrey[3]!));
+            borderSide: BorderSide(color: AppColor.colorGrey[2]!));
     }
   }
 
@@ -397,7 +420,7 @@ class _CustomTextFieldState extends State<CustomTextField> {
       case TextFieldStyle.normal:
       case TextFieldStyle.dropdownFix:
       case TextFieldStyle.calendarFix:
-        return AppColor.colorBackground[1];
+        return AppColor.colorGrey[4];
       case TextFieldStyle.underline:
         return Colors.transparent;
       case TextFieldStyle.outline:
@@ -411,4 +434,116 @@ class _CustomTextFieldState extends State<CustomTextField> {
         return AppColor.colorWhite;
     }
   }
+}
+
+class DropdownModalPopup extends StatefulWidget {
+  const DropdownModalPopup({
+    Key? key,
+    this.value,
+    required this.items,
+    this.onChanged,
+    this.title,
+  }) : super(key: key);
+
+  final String? value;
+  final List<DropdownInputItem> items;
+  final void Function(String value)? onChanged;
+  final String? title;
+
+  @override
+  State<DropdownModalPopup> createState() => _DropdownModalPopupState();
+}
+
+class _DropdownModalPopupState extends State<DropdownModalPopup> {
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 5),
+      decoration: const BoxDecoration(
+        color: Colors.white,
+        borderRadius: BorderRadius.only(
+          topLeft: Radius.circular(12.0),
+          topRight: Radius.circular(12.0),
+        ),
+      ),
+      child: Column(
+        mainAxisAlignment: MainAxisAlignment.start,
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          Material(
+            color: Colors.transparent,
+            child: SizedBox(
+              width: double.infinity,
+              height: 48.0,
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  Padding(
+                    padding: const EdgeInsets.only(left: 20),
+                    child: Text(
+                      widget.title ?? '',
+                      style: AppTextStyle.px24Semi,
+                    ),
+                  ),
+                  Align(
+                    alignment: Alignment.centerRight,
+                    child: IconButton(
+                      iconSize: 48.0,
+                      splashRadius: 18.0,
+                      splashColor: AppColor.colorBlack.withOpacity(0.1),
+                      highlightColor: AppColor.colorBlack.withOpacity(0.1),
+                      padding: EdgeInsets.zero,
+                      icon: Icon(
+                        Icons.close,
+                        color: AppColor.colorBlack.withOpacity(0.25),
+                        size: 24.0,
+                      ),
+                      onPressed: () => Navigator.pop(context),
+                    ),
+                  ),
+                ],
+              ),
+            ),
+          ),
+          Divider(
+            thickness: 0.5,
+            color: AppColor.colorGrey[3]!,
+          ),
+          Material(
+            color: AppColor.colorWhite,
+            surfaceTintColor: AppColor.colorWhite,
+            child: SizedBox(
+              height: 200,
+              child: ListView.builder(
+                  padding: EdgeInsets.zero,
+                  shrinkWrap: false,
+                  itemCount: widget.items.length,
+                  itemBuilder: (context, index) {
+                    return ListTile(
+                      title: Text(
+                        widget.items[index].label,
+                        style: AppTextStyle.px16Md,
+                      ),
+                      onTap: () {
+                        widget.onChanged?.call(widget.items[index].value);
+                        Navigator.pop(context);
+                      },
+                    );
+                  }),
+            ),
+          )
+        ],
+      ),
+    );
+  }
+}
+
+class DropdownInputItem {
+  final String label;
+  final String value;
+
+  DropdownInputItem(
+    this.label,
+    this.value,
+  );
 }

@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:get/get_navigation/src/root/get_material_app.dart';
-import 'package:get/instance_manager.dart';
+
 import 'package:todo_app/data/datasources/local/local_datasource.dart';
 import 'package:todo_app/dependency_injection.dart';
-import 'package:todo_app/presentation/pages/task_page.dart';
+
 import 'package:todo_app/presentation/pages/todo_list_page.dart';
 import 'package:todo_app/presentation/routes/app_screen.dart';
 import 'package:todo_app/presentation/utils/colors.dart';
@@ -24,6 +24,7 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return GetMaterialApp(
       title: 'Todo List',
+      debugShowCheckedModeBanner: false,
       theme: ThemeData(
         fontFamily: 'SukhumvitSet',
         radioTheme: RadioThemeData(
@@ -45,7 +46,7 @@ class MyApp extends StatelessWidget {
           }
         }))),
         colorScheme: ColorScheme.fromSeed(seedColor: AppColor.colorPrimary),
-        useMaterial3: true,
+        useMaterial3: false,
       ),
       home: const TodoListPage(),
       getPages: AppScreen.routes,

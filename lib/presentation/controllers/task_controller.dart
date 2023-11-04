@@ -10,8 +10,51 @@ class TaskController extends GetxController {
   final TaskUsecase _taskUsecase;
   TaskController(this._taskUsecase);
   int _page = 1;
-  int _limit = 2;
+  int _limit = 10;
+  String sortBySelected = "";
+  String searchQuery = "";
+  String selectedID = "";
   var tasks = <TaskEntity>[].obs;
+  var filteredTasks = <TaskEntity>[].obs;
+
+  Future<void> init() async {
+    sortBySelected = "";
+    searchQuery = "";
+    selectedID = "";
+    await clearTask();
+    await fetchTask().then((value) => sortyBy());
+  }
+
+  void sortyBy() {
+    switch (sortBySelected) {
+      case "Title":
+        tasks.sort((a, b) => a.title!.compareTo(b.title!));
+        break;
+      case "Date":
+        tasks.sort((a, b) => a.createdDate!.compareTo(b.createdDate!));
+        break;
+      case "Status":
+        tasks.sort((a, b) => a.status!.compareTo(b.status!));
+        break;
+      default:
+        tasks.sort((a, b) => a.createdDate!.compareTo(b.createdDate!));
+    }
+  }
+
+  void search() {
+    if (searchQuery.isNotEmpty) {
+      filteredTasks = tasks
+          .where((item) =>
+              item.title!.toLowerCase().contains(searchQuery.toLowerCase()) ||
+              item.description!
+                  .toLowerCase()
+                  .contains(searchQuery.toLowerCase()))
+          .toList()
+          .obs;
+
+      print(filteredTasks.length);
+    }
+  }
 
   Future<void> fetchTask() async {
     await _taskUsecase.get(page: _page, limit: _limit).then((value) {
@@ -25,6 +68,10 @@ class TaskController extends GetxController {
         fetchTask();
       }
     });
+  }
+
+  Future<void> clearTask() async {
+    tasks.clear();
   }
 
   Future<void> insertTask(TaskEntity task) async {

@@ -26,68 +26,80 @@ class TodoCard extends StatelessWidget {
         child: Column(
           mainAxisAlignment: MainAxisAlignment.start,
           children: [
-            _row2WidgetAlignment(
-              child1: Row(
-                children: [
-                  CircleAvatar(
-                    child: Container(
-                      margin: const EdgeInsets.only(bottom: 10),
-                      width: ScreenSize.width(context) / 2.5,
-                      height: ScreenSize.width(context) / 2.5,
-                      decoration: BoxDecoration(
-                        image: DecorationImage(
-                            fit: BoxFit.contain,
-                            image: MemoryImage(base64.decode(task.image!))),
-                      ),
-                    ),
-                  ),
-                  AppSizedBox.width4(),
-                  Expanded(
-                    child: Text(
-                      task.title!,
-                      style: AppTextStyle.px16Semi,
-                      maxLines: 2,
-                      overflow: TextOverflow.ellipsis,
-                    ),
-                  ),
-                ],
-              ),
-            ),
-            AppSizedBox.height2(),
-            _row2WidgetAlignment(
-                child1: Text(
-              task.description!,
-              style: AppTextStyle.px16Md,
-              maxLines: 3,
-              overflow: TextOverflow.ellipsis,
-            )),
-            Divider(
-              color: AppColor.colorGrey[2],
-            ),
-            _row2WidgetAlignment(
-                child2: Tag(
-                    text: task.status == "COMPLETED"
-                        ? StatusTag.COMPLETED
-                        : StatusTag.IN_PROGRESS),
-                child1: Row(
-                  children: [
-                    Icon(
-                      Icons.calendar_month_rounded,
-                      size: 20,
-                      color: AppColor.colorGrey[1],
-                    ),
-                    AppSizedBox.width4(),
-                    Text(
-                      task.createdDate!.toRfc3339String(),
-                      style: AppTextStyle.px16Md,
-                    )
-                  ],
-                ))
+            _buildImgAndTitle(),
+            _buildDescription(),
+            _buildTimeAndStatus()
           ],
         ),
       ),
     );
   }
+
+  Widget _buildImgAndTitle() => _row2WidgetAlignment(
+        child1: Row(
+          children: [
+            if (task.image!.isNotEmpty) ...[
+              CircleAvatar(
+                backgroundColor: AppColor.colorPrimary[4],
+                child: Image.memory(
+                  base64.decode(task.image!),
+                  width: 30,
+                  height: 30,
+                ),
+              ),
+              AppSizedBox.width4(),
+            ],
+            Expanded(
+              child: Text(
+                task.title!,
+                style: AppTextStyle.px16Semi,
+                maxLines: 2,
+                overflow: TextOverflow.ellipsis,
+              ),
+            ),
+          ],
+        ),
+      );
+
+  Widget _buildDescription() => task.description!.isNotEmpty
+      ? Padding(
+          padding: const EdgeInsets.only(top: 2),
+          child: _row2WidgetAlignment(
+              child1: Text(
+            task.description!,
+            style: AppTextStyle.px16Md,
+            maxLines: 3,
+            overflow: TextOverflow.ellipsis,
+          )),
+        )
+      : AppSizedBox.empty();
+
+  Widget _buildTimeAndStatus() => Column(
+        children: [
+          Divider(
+            color: AppColor.colorGrey[2],
+          ),
+          _row2WidgetAlignment(
+              child2: Tag(
+                  text: task.status == "COMPLETED"
+                      ? StatusTag.COMPLETED
+                      : StatusTag.IN_PROGRESS),
+              child1: Row(
+                children: [
+                  Icon(
+                    Icons.calendar_month_rounded,
+                    size: 20,
+                    color: AppColor.colorGrey[1],
+                  ),
+                  AppSizedBox.width4(),
+                  Text(
+                    task.createdDate!.toRfc3339String(),
+                    style: AppTextStyle.px16Md,
+                  )
+                ],
+              )),
+        ],
+      );
 
   Widget _row2WidgetAlignment({Widget? child1, Widget? child2}) => Row(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,

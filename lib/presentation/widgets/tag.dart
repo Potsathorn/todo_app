@@ -27,7 +27,7 @@ class Tag extends StatelessWidget {
         borderRadius: BorderRadius.circular(4),
       ),
       child: Text(
-        text == StatusTag.IN_PROGRESS ? "IN PROGRESS" : "COMPLETED",
+        text == StatusTag.IN_PROGRESS ? "IN_PROGRESS" : "COMPLETED",
         style: AppTextStyle.px14MdCustom(color: textColor ?? titleColor()),
       ),
     );

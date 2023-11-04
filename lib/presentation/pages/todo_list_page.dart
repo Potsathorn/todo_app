@@ -30,21 +30,33 @@ class _TodoListPageState extends State<TodoListPage> {
   }
 
   Future<void> fetchData() async {
-    await _taskController.fetchTask();
+    WidgetsBinding.instance.addPostFrameCallback((_) async {
+      await _taskController.init();
+    });
   }
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      backgroundColor: AppColor.colorBackground,
-      appBar: CustomAppBar(
-        title: Text(
-          "Todo List",
-          style: AppTextStyle.px22SemiCustom(color: AppColor.colorWhite),
+    return WillPopScope(
+      onWillPop: () => Future.value(false),
+      child: Scaffold(
+        backgroundColor: AppColor.colorBackground,
+        appBar: CustomAppBar(
+          title: Text(
+            "Todo List",
+            style: AppTextStyle.px22SemiCustom(color: AppColor.colorWhite),
+          ),
+          actions: [_buildSort()],
         ),
-      ),
-      body: Column(
-        children: [_buildSearchBar(), _buildTodoCardList(), _buildBtn()],
+        body: InkWell(
+          onTap: () {
+            FocusScope.of(context).unfocus();
+          },
+          child: Column(
+            children: [_buildSearchBar(), _buildHeader(), _buildTodoCardList()],
+          ),
+        ),
+        bottomNavigationBar: _buildBtn(),
       ),
     );
   }
@@ -54,26 +66,118 @@ class _TodoListPageState extends State<TodoListPage> {
       controller: _searchController,
       hintText: 'Title, Description',
       onChanged: (query) {
+        _taskController.searchQuery = query;
+        _taskController.search();
         setState(() {});
       },
       onTapClear: () {
         _searchController.clear();
+        _taskController.searchQuery = _searchController.text;
         setState(() {});
       },
     );
   }
 
-  Widget _buildTodoCardList() => Expanded(
-          child: Obx(
-        () => ListView.builder(
-            itemCount: _taskController.tasks.length,
-            itemBuilder: (BuildContext ctx, int index) {
-              return TodoCard(task: _taskController.tasks[index]);
-            }),
+  Widget _buildHeader() {
+    return Obx(() {
+      final tasksList = _taskController.searchQuery.isEmpty
+          ? _taskController.tasks
+          : _taskController.filteredTasks;
+      final allCount = tasksList.length;
+      final inProgressCount =
+          tasksList.where((e) => e.status == "IN_PROGRESS").toList().length;
+      final completedCount =
+          tasksList.where((e) => e.status == "COMPLETED").toList().length;
+      return Container(
+        height: 30,
+        width: ScreenSize.width(context),
+        padding: const EdgeInsets.symmetric(horizontal: 10),
+        decoration: BoxDecoration(
+            color: AppColor.colorText,
+            border: Border(top: BorderSide(color: AppColor.colorGrey[1]!))),
+        child: Row(
+          children: [
+            Expanded(
+                child: Text(
+              "All ($allCount)",
+              style: AppTextStyle.px14MdCustom(color: AppColor.colorWhite),
+            )),
+            Text("IN_PROGRESS ($inProgressCount) | COMPLETED ($completedCount)",
+                style: AppTextStyle.px14MdCustom(color: AppColor.colorWhite))
+          ],
+        ),
+      );
+    });
+  }
+
+  Widget _buildTodoCardList() => Expanded(child: Obx(
+        () {
+          final tasksList = _taskController.searchQuery.isEmpty
+              ? _taskController.tasks
+              : _taskController.filteredTasks;
+          return ListView.builder(
+              itemCount: tasksList.length,
+              itemBuilder: (BuildContext ctx, int index) {
+                return InkWell(
+                  onTap: () {
+                    _taskController.selectedID = tasksList[index].id ?? "";
+                    Get.toNamed(Routes.task);
+                  },
+                  child: TodoCard(task: tasksList[index]),
+                );
+              });
+        },
       ));
 
+  Widget _buildSort() => Row(
+        children: [
+          Text(
+            "Sort By",
+            style: AppTextStyle.px16MdCustom(
+              color: AppColor.colorWhite,
+            ),
+          ),
+          PopupMenuButton<String>(
+              icon: const Icon(
+                Icons.sort,
+                color: AppColor.colorWhite,
+              ),
+              color: AppColor.colorWhite,
+              onSelected: (value) {
+                _taskController.sortBySelected = value;
+                _taskController.sortyBy();
+              },
+              position: PopupMenuPosition.under,
+              itemBuilder: (BuildContext context) {
+                final sortOptions = ['Title', 'Date', 'Status'];
+                final List<PopupMenuItem<String>> popupMenuItems =
+                    sortOptions.map((String element) {
+                  return PopupMenuItem<String>(
+                    value: element,
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        Text(
+                          element,
+                          style: AppTextStyle.px16Md,
+                        ),
+                        if (_taskController.sortBySelected == element)
+                          Icon(
+                            Icons.check,
+                            color: AppColor.colorPrimary[2],
+                          )
+                      ],
+                    ),
+                  );
+                }).toList();
+
+                return popupMenuItems;
+              }),
+        ],
+      );
+
   Widget _buildBtn() => Container(
-        padding: const EdgeInsets.all(20.0),
+        padding: const EdgeInsets.all(15.0),
         decoration: BoxDecoration(
           color: AppColor.colorWhite,
           boxShadow: [
@@ -93,6 +197,7 @@ class _TodoListPageState extends State<TodoListPage> {
           color: AppColor.colorPrimary,
           textColor: AppColor.colorWhite,
           onPressed: () {
+            _taskController.selectedID = "";
             Get.toNamed(Routes.task);
           },
         ),

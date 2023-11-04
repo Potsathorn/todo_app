@@ -99,7 +99,7 @@ class _TodoListPageState extends State<TodoListPage> {
           children: [
             Expanded(
                 child: Text(
-              "All ($allCount) | IN_PROGRESS ($inProgressCount) | COMPLETED ($completedCount)",
+              "ALL ($allCount) | IN_PROGRESS ($inProgressCount) | COMPLETED ($completedCount)",
               style: AppTextStyle.px14MdCustom(color: AppColor.colorText),
             )),
             _buildSort()
@@ -148,8 +148,6 @@ class _TodoListPageState extends State<TodoListPage> {
                 color: AppColor.colorWhite,
                 padding: EdgeInsets.zero,
                 onSelected: (value) {
-                  var locale = const Locale('th', 'TH');
-                  Get.updateLocale(locale);
                   _taskController.sortBySelected = value;
                   _taskController.sortyBy();
                 },

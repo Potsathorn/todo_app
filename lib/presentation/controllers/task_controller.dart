@@ -10,7 +10,7 @@ class TaskController extends GetxController {
   final TaskUsecase _taskUsecase;
   TaskController(this._taskUsecase);
   int _page = 1;
-  int _limit = 10;
+  int _limit = 2;
   String sortBySelected = "";
   String searchQuery = "";
   String selectedID = "";
@@ -89,7 +89,6 @@ class TaskController extends GetxController {
     log("delete");
     await _taskUsecase.delete(key: key).then((value) async {
       {
-        tasks.clear();
         log("delete Success");
       }
     });

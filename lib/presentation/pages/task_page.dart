@@ -96,7 +96,7 @@ class _TaskPageState extends State<TaskPage> {
                           strokeAlign: BorderSide.strokeAlignOutside,
                           width: selectedImg == index ? 5 : 2,
                           color: selectedImg == index
-                              ? AppColor.colorPrimary[2]!
+                              ? AppColor.colorPrimary
                               : AppColor.colorGrey[8]!),
                     ),
                   ),
@@ -219,7 +219,7 @@ class _TaskPageState extends State<TaskPage> {
                   width: 5,
                   color: selectedImg == -1
                       ? AppColor.colorGrey[8]!
-                      : AppColor.colorPrimary[2]!),
+                      : AppColor.colorPrimary),
             ),
             child: selectedImg != -1
                 ? null

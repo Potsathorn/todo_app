@@ -2,7 +2,7 @@
 
 import 'dart:developer';
 
-import 'package:get/state_manager.dart';
+import 'package:get/get.dart';
 import 'package:todo_app/domain/entities/local/task_entity.dart';
 import 'package:todo_app/domain/usecases/task_usecase.dart';
 
@@ -26,18 +26,14 @@ class TaskController extends GetxController {
   }
 
   void sortyBy() {
-    switch (sortBySelected) {
-      case "Title":
-        tasks.sort((a, b) => a.title!.compareTo(b.title!));
-        break;
-      case "Date":
-        tasks.sort((a, b) => a.createdDate!.compareTo(b.createdDate!));
-        break;
-      case "Status":
-        tasks.sort((a, b) => a.status!.compareTo(b.status!));
-        break;
-      default:
-        tasks.sort((a, b) => a.createdDate!.compareTo(b.createdDate!));
+    if (sortBySelected == "title".tr) {
+      tasks.sort((a, b) => a.title!.compareTo(b.title!));
+    } else if (sortBySelected == "date".tr) {
+      tasks.sort((a, b) => a.createdDate!.compareTo(b.createdDate!));
+    } else if (sortBySelected == "status".tr) {
+      tasks.sort((a, b) => a.status!.compareTo(b.status!));
+    } else {
+      tasks.sort((a, b) => a.createdDate!.compareTo(b.createdDate!));
     }
   }
 
@@ -51,14 +47,11 @@ class TaskController extends GetxController {
                   .contains(searchQuery.toLowerCase()))
           .toList()
           .obs;
-
-      print(filteredTasks.length);
     }
   }
 
   Future<void> fetchTask() async {
     await _taskUsecase.get(page: _page, limit: _limit).then((value) {
-      print(value);
       if (value.length < _limit) {
         //is last page
         tasks.addAll(value);

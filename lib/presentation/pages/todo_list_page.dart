@@ -43,10 +43,10 @@ class _TodoListPageState extends State<TodoListPage> {
         backgroundColor: AppColor.colorBackground,
         appBar: CustomAppBar(
           title: Text(
-            "Todo List",
+            "appTitle".tr,
             style: AppTextStyle.px22SemiCustom(color: AppColor.colorWhite),
           ),
-          actions: [_buildSort()],
+          actions: [_buildChangeLanguage()],
         ),
         body: InkWell(
           onTap: () {
@@ -64,7 +64,7 @@ class _TodoListPageState extends State<TodoListPage> {
   Widget _buildSearchBar() {
     return CustomSearchBar(
       controller: _searchController,
-      hintText: 'Title, Description',
+      hintText: 'searchHint'.tr,
       onChanged: (query) {
         _taskController.searchQuery = query;
         _taskController.search();
@@ -93,17 +93,16 @@ class _TodoListPageState extends State<TodoListPage> {
         width: ScreenSize.width(context),
         padding: const EdgeInsets.symmetric(horizontal: 10),
         decoration: BoxDecoration(
-            color: AppColor.colorText,
+            //color: AppColor.colorText,
             border: Border(top: BorderSide(color: AppColor.colorGrey[1]!))),
         child: Row(
           children: [
             Expanded(
                 child: Text(
-              "All ($allCount)",
-              style: AppTextStyle.px14MdCustom(color: AppColor.colorWhite),
+              "All ($allCount) | IN_PROGRESS ($inProgressCount) | COMPLETED ($completedCount)",
+              style: AppTextStyle.px14MdCustom(color: AppColor.colorText),
             )),
-            Text("IN_PROGRESS ($inProgressCount) | COMPLETED ($completedCount)",
-                style: AppTextStyle.px14MdCustom(color: AppColor.colorWhite))
+            _buildSort()
           ],
         ),
       );
@@ -132,47 +131,102 @@ class _TodoListPageState extends State<TodoListPage> {
   Widget _buildSort() => Row(
         children: [
           Text(
-            "Sort By",
-            style: AppTextStyle.px16MdCustom(
+            "sortBy".tr,
+            style: AppTextStyle.px14MdCustom(
+              color: AppColor.colorText,
+            ),
+          ),
+          SizedBox(
+            width: 15,
+            height: 15,
+            child: PopupMenuButton<String>(
+                icon: const Icon(
+                  Icons.arrow_downward_outlined,
+                  color: AppColor.colorText,
+                  size: 15,
+                ),
+                color: AppColor.colorWhite,
+                padding: EdgeInsets.zero,
+                onSelected: (value) {
+                  var locale = const Locale('th', 'TH');
+                  Get.updateLocale(locale);
+                  _taskController.sortBySelected = value;
+                  _taskController.sortyBy();
+                },
+                position: PopupMenuPosition.under,
+                itemBuilder: (BuildContext context) {
+                  final sortOptions = ['title'.tr, 'date'.tr, 'status'.tr];
+                  final List<PopupMenuItem<String>> popupMenuItems =
+                      sortOptions.map((String element) {
+                    return PopupMenuItem<String>(
+                      value: element,
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: [
+                          Text(
+                            element,
+                            style: AppTextStyle.px16Md,
+                          ),
+                          if (_taskController.sortBySelected == element)
+                            Icon(
+                              Icons.check,
+                              color: AppColor.colorPrimary[2],
+                            )
+                        ],
+                      ),
+                    );
+                  }).toList();
+
+                  return popupMenuItems;
+                }),
+          ),
+        ],
+      );
+  Widget _buildChangeLanguage() => Row(
+        children: [
+          Text(
+            "language".tr,
+            style: AppTextStyle.px18MdCustom(
               color: AppColor.colorWhite,
             ),
           ),
-          PopupMenuButton<String>(
-              icon: const Icon(
-                Icons.sort,
+          AppSizedBox.width4(),
+          SizedBox(
+            width: 20,
+            height: 20,
+            child: PopupMenuButton<String>(
+                icon: const Icon(
+                  Icons.language_outlined,
+                  color: AppColor.colorWhite,
+                  size: 20,
+                ),
+                padding: EdgeInsets.zero,
                 color: AppColor.colorWhite,
-              ),
-              color: AppColor.colorWhite,
-              onSelected: (value) {
-                _taskController.sortBySelected = value;
-                _taskController.sortyBy();
-              },
-              position: PopupMenuPosition.under,
-              itemBuilder: (BuildContext context) {
-                final sortOptions = ['Title', 'Date', 'Status'];
-                final List<PopupMenuItem<String>> popupMenuItems =
-                    sortOptions.map((String element) {
-                  return PopupMenuItem<String>(
-                    value: element,
-                    child: Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: [
-                        Text(
-                          element,
-                          style: AppTextStyle.px16Md,
-                        ),
-                        if (_taskController.sortBySelected == element)
-                          Icon(
-                            Icons.check,
-                            color: AppColor.colorPrimary[2],
-                          )
-                      ],
-                    ),
-                  );
-                }).toList();
+                onSelected: (value) {
+                  if (value == '🇹🇭 ภาษาไทย') {
+                    Get.updateLocale(const Locale('th', 'TH'));
+                  } else {
+                    Get.updateLocale(const Locale('en', 'US'));
+                  }
+                },
+                position: PopupMenuPosition.under,
+                itemBuilder: (BuildContext context) {
+                  final langOptions = ['🇬🇧 English', '🇹🇭 ภาษาไทย'];
+                  final List<PopupMenuItem<String>> popupMenuItems =
+                      langOptions.map((String element) {
+                    return PopupMenuItem<String>(
+                      value: element,
+                      child: Text(
+                        element,
+                        style: AppTextStyle.px16Md,
+                      ),
+                    );
+                  }).toList();
 
-                return popupMenuItems;
-              }),
+                  return popupMenuItems;
+                }),
+          ),
+          AppSizedBox.width10(),
         ],
       );
 
@@ -190,7 +244,7 @@ class _TodoListPageState extends State<TodoListPage> {
           ],
         ),
         child: CustomButton(
-          text: "CREATE",
+          text: "create".tr,
           width: ScreenSize.width(context),
           isOutlined: true,
           borderColor: AppColor.colorPrimary,

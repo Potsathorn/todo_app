@@ -2,6 +2,7 @@ import 'dart:convert';
 import 'dart:developer';
 
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
 import 'package:get/get_navigation/get_navigation.dart';
 import 'package:get/instance_manager.dart';
 import 'package:todo_app/data/datasources/local/base64_mock.dart';
@@ -113,17 +114,17 @@ class _TaskPageState extends State<TaskPage> {
       context: context,
       builder: (BuildContext context) {
         return AlertDialog(
-          title: const Text('Delete Task'),
-          content: const Text('Are you sure you want to delete this task?'),
+          title: Text('deleteTask'.tr),
+          content: Text('deleteMsg'.tr),
           actions: <Widget>[
             CustomButton(
-              text: "Back",
+              text: "back".tr,
               onPressed: () => Get.back(),
               color: AppColor.colorGrey[4]!,
               textColor: AppColor.colorText,
             ),
             CustomButton(
-              text: "OK",
+              text: "ok".tr,
               onPressed: () async {
                 await _taskController.deleteTaskEntity(_idController.text);
                 Get.offAndToNamed(Routes.todoList);
@@ -139,7 +140,7 @@ class _TaskPageState extends State<TaskPage> {
     _errorMsg.clear();
     for (var element in requiredField) {
       if (element.text.isEmpty) {
-        _errorMsg[element.hashCode.toString()] = "Please input data";
+        _errorMsg[element.hashCode.toString()] = "errorText".tr;
       } else {
         _errorMsg[element.hashCode.toString()] = null;
       }
@@ -155,7 +156,7 @@ class _TaskPageState extends State<TaskPage> {
         backgroundColor: AppColor.colorBackground[1],
         appBar: CustomAppBar(
           title: Text(
-            _isCreate() ? "Create Task" : "Update Task",
+            _isCreate() ? "createTask".tr : "updateTask".tr,
             style: AppTextStyle.px22SemiCustom(color: AppColor.colorWhite),
           ),
           actions: [if (!_isCreate()) _buildDelete()],
@@ -229,7 +230,7 @@ class _TaskPageState extends State<TaskPage> {
                   ),
           ),
           CustomButton(
-            text: "Select Image",
+            text: "selectImage".tr,
             width: ScreenSize.width(context) / 2.5,
             isOutlined: true,
             borderColor: AppColor.colorPrimary,
@@ -249,7 +250,7 @@ class _TaskPageState extends State<TaskPage> {
           _errorMsg[_idController.hashCode.toString()] = null;
           setState(() {});
         },
-        label: 'ID',
+        label: 'id'.tr,
         isRequired: true,
         maxLength: 40,
         style: TextFieldStyle.normal,
@@ -262,7 +263,7 @@ class _TaskPageState extends State<TaskPage> {
           _errorMsg[_titleController.hashCode.toString()] = null;
           setState(() {});
         },
-        label: 'Title',
+        label: 'title'.tr,
         isRequired: true,
         maxLength: 100,
         style: TextFieldStyle.outline,
@@ -270,7 +271,7 @@ class _TaskPageState extends State<TaskPage> {
 
   Widget _descriptionField() => CustomTextField(
         controller: _descriptionController,
-        label: 'Description',
+        label: 'description'.tr,
         maxLine: 3,
         isTextBox: true,
         style: TextFieldStyle.outline,
@@ -278,7 +279,7 @@ class _TaskPageState extends State<TaskPage> {
   Widget _dateTimeField() => CustomTextField(
         controller: _createDateController,
         errorText: _errorMsg[_createDateController.hashCode.toString()],
-        label: 'Date',
+        label: 'date'.tr,
         isRequired: true,
         pickTime: true,
         onConfirmDateTime: (value) {
@@ -296,7 +297,7 @@ class _TaskPageState extends State<TaskPage> {
   Widget _statusField() => CustomTextField(
         controller: _statusController,
         errorText: _errorMsg[_statusController.hashCode.toString()],
-        label: 'Status',
+        label: 'status'.tr,
         isRequired: true,
         style: TextFieldStyle.dropdown,
         items: [
@@ -327,7 +328,7 @@ class _TaskPageState extends State<TaskPage> {
           children: [
             Expanded(
               child: CustomButton(
-                text: "Back",
+                text: "back".tr,
                 onPressed: () => Get.back(),
                 color: AppColor.colorGrey[4]!,
                 textColor: AppColor.colorText,
@@ -336,7 +337,7 @@ class _TaskPageState extends State<TaskPage> {
             AppSizedBox.width10(),
             Expanded(
                 child: CustomButton(
-              text: _isCreate() ? "Create" : "Update",
+              text: _isCreate() ? "create".tr : "update".tr,
               onPressed: () {
                 if (_validator()) {
                   final task = TaskEntity(

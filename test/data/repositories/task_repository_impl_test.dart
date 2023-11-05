@@ -10,7 +10,7 @@ import 'task_repository_impl_test.mocks.dart';
 
 @GenerateMocks([LocalDataSource])
 void main() {
-  group('TaskRepositoryImpl', () {
+  group('TaskRepository', () {
     late MockLocalDataSource mockLocalDataSource;
     late TaskRepository taskRepository;
 

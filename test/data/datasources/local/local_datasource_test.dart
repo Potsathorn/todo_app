@@ -4,7 +4,7 @@ import 'package:todo_app/data/datasources/local/local_datasource.dart';
 import 'package:todo_app/data/models/local/task_model.dart';
 
 void main() {
-  group('LocalDataSourceImpl', () {
+  group('LocalDataSource', () {
     late LocalDataSource localDataSource;
     late Box<TaskModel> taskBox;
 

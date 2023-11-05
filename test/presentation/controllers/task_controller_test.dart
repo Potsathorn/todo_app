@@ -56,7 +56,7 @@ void main() {
         expect(taskController.tasks, tasksToFetch);
       });
 
-      test('insertTask() should call _taskUsecase.insert', () async {
+      test('insertTask() should call TaskUsecase insert()', () async {
         final taskToInsert = TaskEntity(title: 'New Task');
         when(mockTaskUsecase.insert(task: taskToInsert))
             .thenAnswer((_) => Future.value(1));
@@ -66,7 +66,7 @@ void main() {
         verify(mockTaskUsecase.insert(task: taskToInsert)).called(1);
       });
 
-      test('updateTask() should call _taskUsecase.update', () async {
+      test('updateTask() should call TaskUsecase update()', () async {
         final taskToUpdate = TaskEntity(id: '123', title: 'Updated Task');
         when(mockTaskUsecase.update(task: taskToUpdate))
             .thenAnswer((_) => Future.value(1));
@@ -76,7 +76,7 @@ void main() {
         verify(mockTaskUsecase.update(task: taskToUpdate)).called(1);
       });
 
-      test('deleteTask() should call _taskUsecase.delete', () async {
+      test('deleteTask() should call TaskUsecase delete()', () async {
         const taskIdToDelete = '123';
         when(mockTaskUsecase.delete(key: taskIdToDelete))
             .thenAnswer((_) => Future.value(1));

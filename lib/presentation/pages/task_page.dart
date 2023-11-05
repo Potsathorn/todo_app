@@ -126,7 +126,7 @@ class _TaskPageState extends State<TaskPage> {
             CustomButton(
               text: "ok".tr,
               onPressed: () async {
-                await _taskController.deleteTaskEntity(_idController.text);
+                await _taskController.deleteTask(_idController.text);
                 Get.offAndToNamed(Routes.todoList);
               },
             ),
@@ -350,7 +350,7 @@ class _TaskPageState extends State<TaskPage> {
                       status: _statusController.text);
                   _isCreate()
                       ? _taskController.insertTask(task)
-                      : _taskController.updateTaskEntity(task);
+                      : _taskController.updateTask(task);
                   Get.offAndToNamed(Routes.todoList);
                 }
 

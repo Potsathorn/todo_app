@@ -10,7 +10,7 @@ class TaskController extends GetxController {
   final TaskUsecase _taskUsecase;
   TaskController(this._taskUsecase);
   int _page = 1;
-  int _limit = 2;
+  int _limit = 10;
   String sortBySelected = "";
   String searchQuery = "";
   String selectedID = "";
@@ -76,7 +76,7 @@ class TaskController extends GetxController {
     });
   }
 
-  Future<void> updateTaskEntity(TaskEntity task) async {
+  Future<void> updateTask(TaskEntity task) async {
     log("update");
     await _taskUsecase.update(task: task).then((value) async {
       {
@@ -85,7 +85,7 @@ class TaskController extends GetxController {
     });
   }
 
-  Future<void> deleteTaskEntity(String key) async {
+  Future<void> deleteTask(String key) async {
     log("delete");
     await _taskUsecase.delete(key: key).then((value) async {
       {

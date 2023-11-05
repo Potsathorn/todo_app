@@ -1,5 +1,8 @@
+import 'dart:convert';
+
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:todo_app/data/datasources/local/base64_mock.dart';
 import 'package:todo_app/presentation/controllers/task_controller.dart';
 import 'package:todo_app/presentation/routes/app_routes.dart';
 import 'package:todo_app/presentation/utils/colors.dart';
@@ -48,7 +51,7 @@ class _TodoListPageState extends State<TodoListPage> {
           ),
           actions: [_buildChangeLanguage()],
         ),
-        body: InkWell(
+        body: GestureDetector(
           onTap: () {
             FocusScope.of(context).unfocus();
           },
@@ -117,7 +120,7 @@ class _TodoListPageState extends State<TodoListPage> {
           return ListView.builder(
               itemCount: tasksList.length,
               itemBuilder: (BuildContext ctx, int index) {
-                return InkWell(
+                return GestureDetector(
                   onTap: () {
                     _taskController.selectedID = tasksList[index].id ?? "";
                     Get.toNamed(Routes.task);
@@ -190,18 +193,23 @@ class _TodoListPageState extends State<TodoListPage> {
           ),
           AppSizedBox.width4(),
           SizedBox(
-            width: 20,
-            height: 20,
+            width: 25,
+            height: 25,
             child: PopupMenuButton<String>(
-                icon: const Icon(
-                  Icons.language_outlined,
-                  color: AppColor.colorWhite,
-                  size: 20,
+                icon: CircleAvatar(
+                  backgroundColor: AppColor.colorWhite,
+                  child: Image.memory(
+                    base64.decode(Get.locale == const Locale('en', 'US')
+                        ? ukBase64
+                        : thBase64),
+                    width: 20,
+                    height: 20,
+                  ),
                 ),
                 padding: EdgeInsets.zero,
                 color: AppColor.colorWhite,
                 onSelected: (value) {
-                  if (value == '🇹🇭 ภาษาไทย') {
+                  if (value == 'ภาษาไทย') {
                     Get.updateLocale(const Locale('th', 'TH'));
                   } else {
                     Get.updateLocale(const Locale('en', 'US'));
@@ -209,14 +217,27 @@ class _TodoListPageState extends State<TodoListPage> {
                 },
                 position: PopupMenuPosition.under,
                 itemBuilder: (BuildContext context) {
-                  final langOptions = ['🇬🇧 English', '🇹🇭 ภาษาไทย'];
+                  final langOptions = ['English', 'ภาษาไทย'];
                   final List<PopupMenuItem<String>> popupMenuItems =
                       langOptions.map((String element) {
                     return PopupMenuItem<String>(
                       value: element,
-                      child: Text(
-                        element,
-                        style: AppTextStyle.px16Md,
+                      child: Row(
+                        children: [
+                          CircleAvatar(
+                            backgroundColor: AppColor.colorWhite,
+                            child: Image.memory(
+                              base64.decode(
+                                  element == 'English' ? ukBase64 : thBase64),
+                              width: 25,
+                              height: 25,
+                            ),
+                          ),
+                          Text(
+                            element,
+                            style: AppTextStyle.px16Md,
+                          ),
+                        ],
                       ),
                     );
                   }).toList();

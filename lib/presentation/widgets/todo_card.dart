@@ -92,9 +92,11 @@ class TodoCard extends StatelessWidget {
                     color: AppColor.colorGrey[1],
                   ),
                   AppSizedBox.width4(),
-                  Text(
-                    task.createdDate!.toRfc3339String(),
-                    style: AppTextStyle.px16Md,
+                  Expanded(
+                    child: Text(
+                      task.createdDate!.toRfc3339String(),
+                      style: AppTextStyle.px16Md,
+                    ),
                   )
                 ],
               )),

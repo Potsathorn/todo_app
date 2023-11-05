@@ -47,15 +47,15 @@ class LocalDataSourceImpl implements LocalDataSource {
 
   @override
   Future<int> updateTask({required TaskModel task}) async {
-    final serviceBox = Hive.box<TaskModel>(TaskModel.boxKey);
-    serviceBox.put(task.id, task);
+    final taskBox = Hive.box<TaskModel>(TaskModel.boxKey);
+    taskBox.put(task.id, task);
     return 1;
   }
 
   @override
   Future<int> deleteTask({required String key}) async {
-    final serviceBox = Hive.box<TaskModel>(TaskModel.boxKey);
-    serviceBox.delete(key);
+    final taskBox = Hive.box<TaskModel>(TaskModel.boxKey);
+    taskBox.delete(key);
     return 1;
   }
 }

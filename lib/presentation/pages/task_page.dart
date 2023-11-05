@@ -3,8 +3,6 @@ import 'dart:developer';
 
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:get/get_navigation/get_navigation.dart';
-import 'package:get/instance_manager.dart';
 import 'package:todo_app/data/datasources/local/base64_mock.dart';
 import 'package:todo_app/domain/entities/local/task_entity.dart';
 import 'package:todo_app/presentation/controllers/task_controller.dart';
@@ -77,7 +75,7 @@ class _TaskPageState extends State<TaskPage> {
               crossAxisCount: 3,
               shrinkWrap: true,
               children: List.generate(base64Img.length, (index) {
-                return InkWell(
+                return GestureDetector(
                   onTap: () {
                     selectedImg = index;
                     setState(() {});
@@ -148,6 +146,9 @@ class _TaskPageState extends State<TaskPage> {
     return requiredField.every((element) => element.text.isNotEmpty);
   }
 
+  bool _isHeightLessThanWidth() =>
+      ScreenSize.height(context) < ScreenSize.width(context);
+
   @override
   Widget build(BuildContext context) {
     return WillPopScope(
@@ -161,35 +162,69 @@ class _TaskPageState extends State<TaskPage> {
           ),
           actions: [if (!_isCreate()) _buildDelete()],
         ),
-        body: InkWell(
+        body: GestureDetector(
           onTap: () {
             FocusScope.of(context).unfocus();
           },
           child: SingleChildScrollView(
-            child: Padding(
-              padding: const EdgeInsets.all(12.0),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.center,
-                children: [
-                  _buildImage(),
-                  _idField(),
-                  AppSizedBox.height16(),
-                  _titleField(),
-                  AppSizedBox.height16(),
-                  _descriptionField(),
-                  AppSizedBox.height16(),
-                  _dateTimeField(),
-                  AppSizedBox.height16(),
-                  _statusField()
-                ],
-              ),
-            ),
-          ),
+              child:
+                  _isHeightLessThanWidth() ? _webDisplay() : _mobileDisplay()),
         ),
         bottomNavigationBar: _buildBottomSheet(),
       ),
     );
   }
+
+  Widget _mobileDisplay() => Padding(
+        padding: const EdgeInsets.all(12.0),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.center,
+          children: [
+            _buildImage(),
+            _idField(),
+            AppSizedBox.height16(),
+            _titleField(),
+            AppSizedBox.height16(),
+            _descriptionField(),
+            AppSizedBox.height16(),
+            _dateTimeField(),
+            AppSizedBox.height16(),
+            _statusField()
+          ],
+        ),
+      );
+
+  Widget _webDisplay() => Padding(
+        padding: const EdgeInsets.all(12.0),
+        child: Column(
+          children: [
+            Row(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Expanded(
+                  child: Column(
+                    children: [
+                      _idField(),
+                      AppSizedBox.height16(),
+                      _titleField(),
+                      AppSizedBox.height16(),
+                      _descriptionField(),
+                    ],
+                  ),
+                ),
+                Padding(
+                  padding: const EdgeInsets.all(20.0),
+                  child: _buildImage(),
+                ),
+              ],
+            ),
+            _dateTimeField(),
+            AppSizedBox.height16(),
+            _statusField(),
+            AppSizedBox.height16(),
+          ],
+        ),
+      );
 
   Widget _buildDelete() => IconButton(
       onPressed: () async {
@@ -200,48 +235,53 @@ class _TaskPageState extends State<TaskPage> {
         color: AppColor.colorWhite,
       ));
 
-  Widget _buildImage() => Column(
-        children: [
-          Container(
-            margin: const EdgeInsets.only(bottom: 10),
-            width: ScreenSize.width(context) / 2.5,
-            height: ScreenSize.width(context) / 2.5,
-            decoration: BoxDecoration(
-              image: selectedImg == -1
-                  ? null
-                  : DecorationImage(
-                      fit: BoxFit.contain,
-                      image:
-                          MemoryImage(base64.decode(base64Img[selectedImg]))),
-              borderRadius: BorderRadius.circular(6),
-              border: Border.all(
-                  strokeAlign: BorderSide.strokeAlignOutside,
-                  width: 5,
-                  color: selectedImg == -1
-                      ? AppColor.colorGrey[8]!
-                      : AppColor.colorPrimary),
-            ),
-            child: selectedImg != -1
+  Widget _buildImage() {
+    return Column(
+      children: [
+        Container(
+          margin: const EdgeInsets.only(bottom: 10),
+          width: 215,
+          height: 215,
+          // width: ScreenSize.width(context) / 2.5,
+          // height: ScreenSize.width(context) / 2.5,
+          decoration: BoxDecoration(
+            image: selectedImg == -1
                 ? null
-                : Icon(
-                    Icons.image,
-                    size: ScreenSize.width(context) / 3,
-                    color: AppColor.colorGrey[8],
-                  ),
+                : DecorationImage(
+                    fit: BoxFit.contain,
+                    image: MemoryImage(base64.decode(base64Img[selectedImg]))),
+            borderRadius: BorderRadius.circular(6),
+            border: Border.all(
+                strokeAlign: BorderSide.strokeAlignOutside,
+                width: 5,
+                color: selectedImg == -1
+                    ? AppColor.colorGrey[8]!
+                    : AppColor.colorPrimary),
           ),
-          CustomButton(
-            text: "selectImage".tr,
-            width: ScreenSize.width(context) / 2.5,
-            isOutlined: true,
-            borderColor: AppColor.colorPrimary,
-            color: AppColor.colorPrimary,
-            textColor: AppColor.colorWhite,
-            onPressed: () {
-              _showSelectImgDialog(context);
-            },
-          ),
-        ],
-      );
+          child: selectedImg != -1
+              ? null
+              : Icon(
+                  Icons.image,
+                  size: 215 / 3,
+                  //size: ScreenSize.width(context) / 3,
+                  color: AppColor.colorGrey[8],
+                ),
+        ),
+        CustomButton(
+          text: "selectImage".tr,
+          width: 215,
+          //width: ScreenSize.width(context) / 2.5,
+          isOutlined: true,
+          borderColor: AppColor.colorPrimary,
+          color: AppColor.colorPrimary,
+          textColor: AppColor.colorWhite,
+          onPressed: () {
+            _showSelectImgDialog(context);
+          },
+        ),
+      ],
+    );
+  }
 
   Widget _idField() => CustomTextField(
         controller: _idController,

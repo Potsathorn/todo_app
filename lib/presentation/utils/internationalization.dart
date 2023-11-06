@@ -17,7 +17,7 @@ class Messages extends Translations {
           'ok': 'OK',
           'update': 'Update',
           'createTask': 'Create Task',
-          'UpdateTask': 'Update Task',
+          'updateTask': 'Update Task',
           'deleteTask': 'Delete Task',
           'deleteMsg': 'Are you sure you want to delete this task?',
           'errorText': 'Please input data',

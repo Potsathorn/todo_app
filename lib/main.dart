@@ -7,7 +7,7 @@ import 'package:todo_app/injection.dart';
 import 'package:todo_app/presentation/pages/todo_list_page.dart';
 import 'package:todo_app/presentation/routes/app_screen.dart';
 import 'package:todo_app/presentation/utils/colors.dart';
-import 'package:todo_app/presentation/utils/localization.dart';
+import 'package:todo_app/presentation/utils/internationalization.dart';
 
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();

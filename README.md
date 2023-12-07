@@ -26,8 +26,21 @@ This is a ToDo app built with Flutter that offers various features for managing 
 
 ## Getting Started
 
+![Screenshot 1](screenshot/Screenshot_Create.png)
+![Screenshot 2](screenshot/Screenshot_Delete.png)
+![Screenshot 3](screenshot/Screenshot_Languages_i18n.png)
+![Screenshot 4](screenshot/Screenshot_MainPage.png)
+![Screenshot 5](screenshot/Screenshot_Responsive.png)
+![Screenshot 6](screenshot/Screenshot_Search.png)
+![Screenshot 7](screenshot/Screenshot_Sort.png)
+![Screenshot 8](screenshot/Screenshot_Update.png)
+
+## Getting Started
+
 To run this app locally, you need to have Flutter installed. Clone the repository and use the following commands:
 
 ```bash
 flutter pub get
 flutter run
+
+
